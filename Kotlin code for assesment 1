@@ -1,0 +1,73 @@
+ import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.snackbar.Snackbar
+
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContentView(R.layout.activity_main)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }//code starts here
+
+        val editText = findViewById<EditText>(R.id.editTextOne)
+        val editText2 = findViewById<EditText>(R.id.editTextTextMultiLine)
+        val button = findViewById<Button>(R.id.btn_One)
+        val button2 = findViewById<Button>(R.id.btn_Two)
+
+
+        //Set button click listener
+        try {
+            val inputText = editText.text.toString()
+
+            val mealSuggestion = when (inputText) {
+                "Breakfast" -> "Smoothies, Muffines, Coffee, Avoado Toast, Oatmeal, Yogurt, Nuts"
+                "Mid-Morning" -> "Sandwich , Nuts and Seeds , Fruit Juice , cheese"
+                "Lunch" -> "Pizza, Rice, Tacos, Sushi, Chicken Wrap"
+                "Mid-Day" -> "chocolate, chips, Pies, Biscuits"
+                "Dinner" -> "Grilled Chicken, Grilled Salmon, Pasta, Tuna Salad wrap"
+                "Desserts" -> "Ice-Cream, Baked Apples, Warm Apple Pie, Chocolate Lava Cake"
+                else -> "Invalid input. Please enter a valid meal time."
+            }
+
+            editText2.setText(mealSuggestion)
+
+        } catch (e: Exception) {
+            editText2.setText("An error occurred")
+
+
+            // Modified meal suggestion logic (lines 55 to 73)
+            button.setOnClickListener { view ->
+                // Retrieve and process the user input for meal type.
+                val mealInput = editText.text.toString().trim().
+
+                // Determine the suggestion using a when block with conditions.
+                val suggestion = when {
+                    mealInput == "mid day snacks" -> {
+                        "For mid day snacks, consider Greek yogurt with fruits, a smoothie, or a handful of nuts."
+                    }
+                    mealInput == "dinner" -> {
+                        "Dinner idea: How about grilled salmon with quinoa and steamed vegetables for a balanced meal?"
+                    }
+                    mealInput == "dessert" -> {
+                        "Dessert suggestion: Enjoy a slice of cheesecake, some dark chocolate, or a fresh fruit salad."
+                    }
+                    else -> null
+                }
+
+                // If a valid suggestion is found, update the output field; otherwise, show an error.
+                suggestion?.let {
+                    editText2.setText(it)
+                } ?: run {
+                    Snackbar.make(view, "Please enter a valid meal type: 'mid day snacks', 'dinner', or 'dessert'.", Snackbar.LENGTH_LONG).show()
+                }
+            }
